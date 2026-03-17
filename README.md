@@ -212,11 +212,11 @@ fi
 
 ## Results
 
-Publically available example data was obtained from the European Nucleotide Archive (ENA) for the project [PRJNA1007680](https://www.ebi.ac.uk/ena/browser/view/PRJNA1007680).
+Publicly available example data were obtained from the European Nucleotide Archive (ENA) under project accession [PRJNA1007680](https://www.ebi.ac.uk/ena/browser/view/PRJNA1007680).
 
-The authors took the human prostate cancer cell line PC3 and treated cells with either RSM3, a peptide inhibitor targeting METTL3, or control agent. After RNA isoaltion, they performed paired end sequencing of an ILLUMINA library with Illumina NovaSeq 6000.
+In this study, the authors used the human prostate cancer cell line PC3 and treated cells with either RSM3 (a peptide inhibitor targeting METTL3) or a control agent. Following RNA isolation, paired-end sequencing libraries were generated and sequenced on an Illumina NovaSeq 6000.
 
-After performing initial QC, it was determined the samples were most likely already processed with fastp as explained in the GEO Accession for this project: [GSE241315](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE241315). Therefore step 2 was skipped in the pipeline.
+Initial quality control (QC) indicated that the sequencing reads had likely already been preprocessed using fastp, as described in the corresponding GEO accession [GSE241315](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE241315). Therefore, the read preprocessing step (Step 2) was omitted from this pipeline.
 
 ![Figure](https://github.com/focyte/Bash-RNAseq/blob/main/Figure.png) 
 
