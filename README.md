@@ -82,7 +82,7 @@ To begin:
 - Follow the configuration steps below
 - Give rnaseq_analysis.sh execution permissions and run the script from its location in your terminal
 
-0. **Configuration**
+### **Configuration**
 
 This section allows you to control some of the sections of the script including:
 - Number of CPU threads used where this can be set by specific packages
@@ -91,7 +91,7 @@ This section allows you to control some of the sections of the script including:
 - Short code block to make the directories if the are not available already
 - A control switch to set which step the script starts from
 
-1. **FastQC Before Trimming**
+### **FastQC Before Trimming**
 
 The purpose of this step is to ascertain what level of processing the samples have already undergone e.g. adaptor removal, and whether they need trimming with step 2 below.
 
@@ -103,7 +103,7 @@ if [ "$START_STEP" -le 1 ]; then
 fi
 ```
 
-2. **Fastp Trimming**
+### **Fastp Trimming**
 
 Samples which require trimming are trimmed with fastp. The fastp tool generates its own reports, but FastQC is also run on the post-trimmed samples to directly compare to pre-trimmed results.
 
@@ -131,7 +131,7 @@ if [ "$START_STEP" -le 2 ]; then
 fi
 ```
 
-3. **Mapping with HISAT2**
+### **Mapping with HISAT2**
 
 Reads are aligned to the human genome using the index files as described above. This generates SAM files and a report of the read mapping statistics.
 
@@ -153,7 +153,7 @@ if [ "$START_STEP" -le 3 ]; then
 fi
 ```
 
-4. **SAM to BAM**
+### **SAM to BAM**
 
 SAM files are converted to BAM files and indexed (step 5) so these files can be used to feature annotate the reads locations to corresponding genes (step 6).
 
@@ -167,7 +167,7 @@ if [ "$START_STEP" -le 4 ]; then
 fi
 ```
 
-5. **Sort & Index BAM**
+### **Sort & Index BAM**
 
 ```bash 
 if [ "$START_STEP" -le 5 ]; then
@@ -180,7 +180,7 @@ if [ "$START_STEP" -le 5 ]; then
 fi
 ```
 
-6. **Count Features**
+### **Count Features**
 
 ```bash 
 if [ "$START_STEP" -le 6 ]; then
