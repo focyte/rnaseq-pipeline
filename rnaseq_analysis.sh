@@ -8,9 +8,11 @@ set -euo pipefail
 ## ================================
 
 THREADS=12
-GENOME_INDEX="../hg38Index/GCA_000001405.15_GRCh38_full_analysis_set" ## Replace with your index directory
-SPLICE_SITES="../hg38Index/human_splice_sites.txt" ## Replace with your index directory
-GTF_FILE="../hg38Index/GCA_000001405.15_GRCh38_primary_only.gtf" ## Replace with your index directory
+
+GENOME_INDEX="../hg38Index/GCF_000001405.40/GCA_000001405.15_GRCh38_no_alt_analysis_set" ## Replace with your index set
+SPLICE_SITES="../hg38Index/GCF_000001405.40/human_splice_sites.txt" ## Replace with your splice site file
+GTF_FILE="../hg38Index/GCF_000001405.40/gencode.v49.annotation.gtf" ## Replace with your gtf file
+
 RAW_DIR="00_raw_fastq" # Add your fastq files here
 PRETRIM_QC="01_fastqc_pretrim"
 TRIM_DIR="02_trimmed_fastq"
@@ -26,20 +28,17 @@ mkdir -p $PRETRIM_QC $TRIM_DIR $POSTTRIM_QC \
          $SAM_DIR $BAM_DIR $SORTED_BAM_DIR $COUNTS_DIR \
          $LOG_DIR $MULTIQC_DIR
 
-## ================================
 
 ## CONTROL: Set starting step
-
-## ================================
 
 # 1 = Pre-trim FastQC
 # 2 = Trimming
 # 3 = Mapping
-# 5 = SAM to BAM
-# 6 = Sort & Index BAM
-# 7 = featureCounts
+# 4 = SAM to BAM
+# 5 = Sort & Index BAM
+# 6 = featureCounts
 
-START_STEP=3  # Change this to skip earlier steps
+START_STEP=1  # Change this to skip earlier steps
 
 ## ================================
 
@@ -61,7 +60,7 @@ fi
 
 if [ "$START_STEP" -le 2 ]; then
     echo "=== Step 2: Trimming with fastp ==="
-    for fq1 in $RAW_DIR/*_1.fastq.gz; do # Change this based on the format of your file
+    for fq1 in $RAW_DIR/*_R1_001.fastq.gz; do # Change this based on the format of your file
         fq2=${fq1/_R1_001.fastq.gz/_R2_001.fastq.gz}
 
         base1=$(basename "$fq1" .fastq.gz)
@@ -90,8 +89,8 @@ fi
 if [ "$START_STEP" -le 3 ]; then
     echo "=== Step 3: Mapping with HISAT2 ==="
     for fq1 in $TRIM_DIR/*_val_1.fq.gz; do
-        fq2=${fq1/_R1_/_R2_}
-        sample=$(basename "$fq1" | sed 's/_val_1.fq.gz//')
+        fq2=${fq1/_R1_001_val_1.fq.gz/_R2_001_val_2.fq.gz}
+        sample=$(basename "$fq1" | sed 's/_R1_001_val_1.fq.gz//')
         
         hisat2 -x $GENOME_INDEX \
             --known-splicesite-infile $SPLICE_SITES \
@@ -139,7 +138,7 @@ fi
 ## ================================
 
 if [ "$START_STEP" -le 6 ]; then
-    echo "=== Step 8: featureCounts ==="
+    echo "=== Step 6: featureCounts ==="
     for sorted_bam_file in $SORTED_BAM_DIR/*_sorted.bam; do
         sample=$(basename "$sorted_bam_file" _sorted.bam)
         featureCounts -T $THREADS -p --countReadPairs \
